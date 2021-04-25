@@ -1,23 +1,31 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen, RegisterScreen } from "../screens";
+import { HomeScreen, RegisterScreen, OTPScreen } from "../screens";
 
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
-function AppNavigatior({ screen }) {
+function RootNavigations() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={screen}
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RootStack.Navigator
+      initialRouteName="Register"
+      screenOptions={{ headerShown: false }}
+    >
+      <RootStack.Screen name="Register" component={RegisterScreen} />
+      <RootStack.Screen name="OTPScreen" component={OTPScreen} />
+    </RootStack.Navigator>
   );
 }
 
-export default AppNavigatior;
-export { AppNavigatior };
+function AuthNavigations() {
+  return (
+    <AuthStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{ headerShown: false }}
+    >
+      <AuthStack.Screen name="Home" component={HomeScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
+export { RootNavigations, AuthNavigations };

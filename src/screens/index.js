@@ -1,2 +1,3 @@
-export * from "./home";
-export * from "./register";
+export * from "./Home";
+export * from "./Register";
+export * from "./OTPScreen";
