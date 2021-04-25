@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from "expo-app-loading";
-import { AppNavigatior } from "./src/navigations";
+import firebase from "./src/firebase";
+import { RootNavigations, AuthNavigations } from "./src/navigations";
 
 export default function App() {
-  const [isAppReady, setAppReady] = React.useState(false);
+  const [isAppReady, setAppReady] = useState(false);
+  const [hasSession, setSession] = useState(false);
 
   React.useEffect(() => {
-    console.log("useEffect Called ===>");
-    setTimeout(() => {
-      setAppReady(true);
-    }, 1000);
+    // handle session - check if the user is already loggedIn
+    firebase.auth().onAuthStateChanged(onAuthStateChanged);
   }, []);
 
-  return isAppReady ? (
-    <AppNavigatior screen={isAppReady ? "Home" : "Register"} />
-  ) : (
-    <AppLoading />
+  const onAuthStateChanged = (user) => {
+    setAppReady(true);
+    setSession(!!user);
+  };
+
+  if (!isAppReady) return <AppLoading />;
+
+  return (
+    <NavigationContainer>
+      {hasSession ? <AuthNavigations /> : <RootNavigations />}
+    </NavigationContainer>
   );
 }
