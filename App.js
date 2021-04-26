@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from "expo-app-loading";
-import firebase from "./src/firebase";
+import { auth } from "./src/firebase";
 import { RootNavigations, AuthNavigations } from "./src/navigations";
 
 export default function App() {
@@ -10,7 +10,9 @@ export default function App() {
 
   React.useEffect(() => {
     // handle session - check if the user is already loggedIn
-    firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
+
+    return subscriber;
   }, []);
 
   const onAuthStateChanged = (user) => {
