@@ -81,7 +81,7 @@ function HomeScreen() {
       {userInfo.userName ? (
         <Text>Hello {userInfo.userName}</Text>
       ) : (
-        <View>
+        <View style={{ padding: 16 }}>
           <TextInput
             defaultValue={displayName}
             onChangeText={setDisplayName}
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomWidth: 1,
     paddingVertical: 12,
+    marginBottom: 16,
   },
   button: {
     paddingHorizontal: 24,
