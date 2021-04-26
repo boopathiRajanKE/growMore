@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import firebase from "../firebase";
+import firebase, { loginWithPhoneNumber } from "../firebase";
 
 function RegisterButton({ onPress }) {
   return (
@@ -25,7 +25,7 @@ function RegisterButton({ onPress }) {
 }
 
 function RegisterForm() {
-  const recaptchaVerifier = React.useRef(null);
+  const recaptchaVerifier = useRef(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [hasError, setError] = useState(false);
   const firebaseConfig = firebase.apps.length
@@ -44,8 +44,7 @@ function RegisterForm() {
     }
     setError(false);
     try {
-      const phoneProvider = new firebase.auth.PhoneAuthProvider();
-      const verificationId = await phoneProvider.verifyPhoneNumber(
+      const verificationId = await loginWithPhoneNumber(
         `+91${phoneNumber}`,
         recaptchaVerifier.current
       );
@@ -64,7 +63,7 @@ function RegisterForm() {
           ref={recaptchaVerifier}
           firebaseConfig={firebaseConfig}
           attemptInvisibleVerification={true}
-          // appVerificationDisabledForTesting={true}
+          appVerificationDisabledForTesting={true}
         />
         <Text style={styles.label}>Enter your phone number to proceed</Text>
         <View style={styles.container}>

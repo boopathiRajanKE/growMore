@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import firebase from "../firebase";
+import { verifyOTP } from "../firebase";
 
 const INVALID_OTP = "Please enter 6 digit OTP.";
 const INCORRECT_OTP = "Incorrect OTP";
@@ -42,11 +42,7 @@ function OTPForm({ verificationId }) {
     }
     setErrorMessage("");
     try {
-      const credential = firebase.auth.PhoneAuthProvider.credential(
-        verificationId,
-        verificationCode
-      );
-      await firebase.auth().signInWithCredential(credential);
+      await verifyOTP(verificationId, verificationCode);
       navigation.navigate("Home");
     } catch (err) {
       if (err.code === "auth/invalid-verification-code") {
