@@ -1,5 +1,5 @@
-//const API_DOMAIN = "https://grow-more-dev.netlify.app";
-const API_DOMAIN = "http://192.168.43.31:9000";
+const API_DOMAIN = "https://grow-more-dev.netlify.app";
+// const API_DOMAIN = "http://192.168.43.31:9000";
 const BASE_PATH = "/.netlify/functions/api";
 
 const userBasePath = `${API_DOMAIN}${BASE_PATH}/user`;
