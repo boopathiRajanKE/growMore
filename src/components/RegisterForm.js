@@ -63,7 +63,7 @@ function RegisterForm() {
           ref={recaptchaVerifier}
           firebaseConfig={firebaseConfig}
           attemptInvisibleVerification={true}
-          appVerificationDisabledForTesting={true}
+          // appVerificationDisabledForTesting={true}
         />
         <Text style={styles.label}>Enter your phone number to proceed</Text>
         <View style={styles.container}>

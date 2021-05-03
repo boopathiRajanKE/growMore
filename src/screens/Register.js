@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,6 +9,12 @@ import {
 import { RegisterForm } from "../components";
 
 function RegisterScreen() {
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+
+  const fetchUserDetails = async () => {};
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>

@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { verifyOTP } from "../firebase";
+import { verifyOTP, createUser, getUserDetails } from "../firebase";
 
 const INVALID_OTP = "Please enter 6 digit OTP.";
 const INCORRECT_OTP = "Incorrect OTP";
@@ -43,6 +43,14 @@ function OTPForm({ verificationId }) {
     setErrorMessage("");
     try {
       await verifyOTP(verificationId, verificationCode);
+      const profileResponse = await getUserDetails();
+      // create entry in backend if the user doesn't exists.
+      if (
+        profileResponse.status === 404 ||
+        profileResponse.errorCode === "not-found"
+      ) {
+        await createUser();
+      }
       navigation.navigate("Home");
     } catch (err) {
       if (err.code === "auth/invalid-verification-code") {

@@ -11,8 +11,15 @@ import {
   StyleSheet,
   LogBox,
 } from "react-native";
+import * as Notifications from "expo-notifications";
 import { signOut } from "../firebase";
-import { getUserDetails, updateUserName } from "../firebase/users";
+import {
+  createUser,
+  getUserDetails,
+  updateUserName,
+  updateNotificationToken,
+} from "../models";
+import { registerForPushNotificationsAsync } from "../utils";
 
 // hide warning "Setting a timer for a long period of time, i.e. multiple minutes"
 // https://stackoverflow.com/a/64832663
@@ -42,6 +49,15 @@ function UpdateButton({ onPress }) {
   );
 }
 
+// to handle notifications when is open(foreground)
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 function HomeScreen() {
   const [displayName, setDisplayName] = useState("");
   const [userInfo, setUserInfo] = useState({});
@@ -49,17 +65,32 @@ function HomeScreen() {
 
   useEffect(() => {
     fetchUserDetails();
+    submitPushNotificationToken();
   }, []);
 
   const fetchUserDetails = async () => {
-    const userResponse = await getUserDetails();
-    setUserInfo(userResponse.data());
+    const profileResponse = await getUserDetails();
+    // if user is not created in the backend
+    if (
+      profileResponse.status === 404 ||
+      profileResponse.errorCode === "not-found"
+    ) {
+      await createUser();
+    }
+    setUserInfo(profileResponse.data);
   };
+
+  const submitPushNotificationToken = async () => {
+    const token = await registerForPushNotificationsAsync();
+    await updateNotificationToken(token);
+  };
+
   const validateDisplayName = () => {
     return displayName.length > 3;
   };
+
   const updateProfile = async () => {
-    const isValidDisplayName = validateDisplayName() || true;
+    const isValidDisplayName = validateDisplayName();
     if (isValidDisplayName) {
       await updateUserName(displayName);
       await fetchUserDetails();
@@ -67,6 +98,7 @@ function HomeScreen() {
       console.log("Please enter a valid display name");
     }
   };
+
   const handleSignOut = async () => {
     try {
       await signOut();
